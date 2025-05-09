@@ -1,4 +1,4 @@
+py-cord==2.4.1
 flask
-discord.py
 websockets
 pysimconnect
