@@ -1,0 +1,4 @@
+flask
+discord.py
+websockets
+pysimconnect
