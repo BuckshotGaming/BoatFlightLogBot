@@ -1,8 +1,8 @@
-
 import os
 import discord
 from discord.ext import commands
 import random
+import sys
 
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="/", intents=intents)
@@ -11,6 +11,9 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # pulled from Render env vars
 CHANNEL_ID = 120120120120120120  # ← previously working ID, kept hardcoded as requested
 
+if not BOT_TOKEN:
+    print("❌ BOT_TOKEN is missing or not set in environment variables.")
+    sys.exit(1)
 
 @bot.event
 async def on_ready():
@@ -20,7 +23,6 @@ async def on_ready():
         print(f"Synced {len(synced)} slash commands.")
     except Exception as e:
         print(f"Failed to sync commands: {e}")
-
 
 @bot.slash_command(name="sendtestlog", description="Send a simulated test flight log.")
 async def send_test_log(ctx):
@@ -57,6 +59,5 @@ async def send_test_log(ctx):
         await ctx.respond("✅ Test log sent to the flight log channel.", ephemeral=True)
     else:
         await ctx.respond("❌ Failed to find the log channel.", ephemeral=True)
-
 
 bot.run(BOT_TOKEN)
