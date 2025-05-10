@@ -1,5 +1,10 @@
 
 import os
+
+print("🔍 ALL ENV VARS:")
+for key, value in os.environ.items():
+    print(f"{key} = {value}")
+
 import discord
 from discord.ext import commands
 
