@@ -9,18 +9,23 @@
 </head>
 <body>
   <div id="map" style="height: 100vh;"></div>
+
   <script src="/static/leaflet.js"></script>
   <script>
     const map = L.map('map').setView([40.0, -95.0], 4);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Example aircraft marker
     const icon = L.icon({
       iconUrl: '/static/plane-icon.png',
-      iconSize: [32, 32]
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -16]
     });
+
     L.marker([40.0, -95.0], { icon }).addTo(map).bindPopup("Test Plane");
   </script>
 </body>
