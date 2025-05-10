@@ -9,7 +9,8 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 
 # ✅ Secure and stable setup
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # pulled from Render env vars
-CHANNEL_ID = 120120120120120120  # ← previously working ID, kept hardcoded as requested
+CHANNEL_ID = CHANNEL_ID = 1370124659676287018
+  # ← previously working ID, kept hardcoded as requested
 
 if not BOT_TOKEN:
     print("❌ BOT_TOKEN is missing or not set in environment variables.")
