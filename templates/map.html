@@ -1,22 +1,27 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Boat Live Flight Map</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/leaflet.css" />
-    <link rel="stylesheet" href="/static/style.css" />
+  <title>Boat Flight Live Map</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/leaflet.css" />
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 100vh;"></div>
-    <script src="/static/leaflet.js"></script>
-    <script>
-        var map = L.map('map').setView([39.8283, -98.5795], 4);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-    </script>
+  <div id="map" style="height: 100vh;"></div>
+  <script src="/static/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([40.0, -95.0], 4);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+
+    // Example aircraft marker
+    const icon = L.icon({
+      iconUrl: '/static/plane-icon.png',
+      iconSize: [32, 32]
+    });
+    L.marker([40.0, -95.0], { icon }).addTo(map).bindPopup("Test Plane");
+  </script>
 </body>
 </html>
