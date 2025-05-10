@@ -16,9 +16,11 @@ if not DISCORD_TOKEN:
 if not LOG_CHANNEL_ID:
     raise ValueError("❌ LOG_CHANNEL_ID not found or invalid!")
 
+# Setup bot
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)
 
+# Flask app for live map
 app = Flask(__name__, static_folder="map")
 
 @app.route('/')
@@ -37,34 +39,43 @@ def serve_map_js():
 def serve_map_css():
     return send_from_directory("map", "style.css")
 
+# Register slash commands using py-cord
+@bot.slash_command(name="sendtestlog", description="Send a test flight log.")
+async def sendtestlog(ctx):
+    await ctx.respond("🛩️ Test flight log posted successfully!")
+
+@bot.slash_command(name="status", description="Check if the bot is online.")
+async def status(ctx):
+    await ctx.respond("✅ Boat Flight Log Bot is online and operational.")
+
+@bot.slash_command(name="flightstatus", description="Get the current flight status.")
+async def flightstatus(ctx):
+    await ctx.respond("📡 No active flight currently. (SimConnect integration pending)")
+
+@bot.slash_command(name="trackme", description="Toggle visibility on the live flight map.")
+async def trackme(ctx):
+    await ctx.respond("📍 Toggled your visibility on the live map. (Sim data needed)")
+
+@bot.slash_command(name="togglelogs", description="Enable or disable automatic log posting.")
+async def togglelogs(ctx):
+    await ctx.respond("🔁 Automatic flight logs toggled. (Feature not yet active)")
+
+@bot.slash_command(name="viewlog", description="View the most recent flight log.")
+async def viewlog(ctx):
+    await ctx.respond("📋 Flight Summary:\n- Duration: 00:00\n- Distance: 0 NM\n- Aircraft: Unknown")
+
+@bot.slash_command(name="recentflights", description="List your recent flights.")
+async def recentflights(ctx):
+    await ctx.respond("🕓 Recent Flights:\n1. Flight A\n2. Flight B\n3. Flight C (placeholder)")
+
 @bot.event
 async def on_ready():
     print(f"✅ Bot connected as {bot.user}")
-    try:
-        synced = await bot.tree.sync()
-        print(f"🔁 Synced {len(synced)} slash command(s).")
-    except Exception as e:
-        print(f"❌ Error syncing commands: {e}")
-
-@bot.tree.command(name="sendtestlog", description="Send a test flight log.")
-async def sendtestlog(interaction: discord.Interaction):
-    await interaction.response.send_message("🛩️ Test flight log posted successfully!")
-
-@bot.tree.command(name="status", description="Show bot status info.")
-async def status(interaction: discord.Interaction):
-    await interaction.response.send_message("✅ Boat Flight Log Bot is online and operational.")
-
-@bot.tree.command(name="trackme", description="Toggle your live map tracking visibility.")
-async def trackme(interaction: discord.Interaction):
-    await interaction.response.send_message("🛰️ Tracking toggled.")
-
-@bot.tree.command(name="flightstatus", description="Show current flight status info.")
-async def flightstatus(interaction: discord.Interaction):
-    await interaction.response.send_message("📡 Flight status: SimConnect data pending...")
 
 def run_bot():
     bot.run(DISCORD_TOKEN)
 
+# Run Flask + Bot
 if __name__ == '__main__':
     threading.Thread(target=run_bot).start()
     app.run(host='0.0.0.0', port=5000)
