@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Boat Live Flight Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body, #map { height: 100%; margin: 0; padding: 0; }
+    .legend {
+      position: absolute;
+      bottom: 30px;
+      left: 10px;
+      z-index: 999;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .legend img {
+      height: 18px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+</head>
+<body>
+  <div id="map"></div>
+  <div class="legend">
+    <strong>Legend</strong><br>
+    <img src="https://img.icons8.com/emoji/48/airplane-emoji.png"/> Airplane<br>
+    <img src="https://img.icons8.com/emoji/48/helicopter-emoji.png"/> Helicopter
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([39.5, -98.35], 4); // Centered on US
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18
+    }).addTo(map);
+
+    const icons = {
+      airplane: L.icon({
+        iconUrl: 'https://img.icons8.com/emoji/48/airplane-emoji.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+      }),
+      helicopter: L.icon({
+        iconUrl: 'https://img.icons8.com/emoji/48/helicopter-emoji.png',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      })
+    };
+
+    const fetchData = async () => {
+      const res = await fetch('/api/locations');
+      const data = await res.json();
+      map.eachLayer(layer => {
+        if (layer instanceof L.Marker) map.removeLayer(layer);
+      });
+
+      data.forEach(pilot => {
+        const icon = pilot.aircraft_type.toLowerCase().includes("helicopter") ? icons.helicopter : icons.airplane;
+        const marker = L.marker([pilot.lat, pilot.lon], { icon }).addTo(map);
+        marker.bindPopup(\`<strong>\${pilot.username}</strong><br>\${pilot.aircraft_type}<br>Status: \${pilot.status}\`);
+      });
+    };
+
+    setInterval(fetchData, 5000);  // Auto-refresh every 5s
+    fetchData();
+  </script>
+</body>
+</html>
