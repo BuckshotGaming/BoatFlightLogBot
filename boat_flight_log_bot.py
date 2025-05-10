@@ -9,8 +9,7 @@ bot = commands.Bot(command_prefix="/", intents=intents)
 
 # ✅ Secure and stable setup
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # pulled from Render env vars
-CHANNEL_ID = 1370124659676287018
-  # ← previously working ID, kept hardcoded as requested
+CHANNEL_ID = 1370124659676287018  # ← hardcoded for now, confirmed working
 
 if not BOT_TOKEN:
     print("❌ BOT_TOKEN is missing or not set in environment variables.")
@@ -28,7 +27,7 @@ async def on_ready():
 @bot.slash_command(name="sendtestlog", description="Send a simulated test flight log.")
 async def send_test_log(ctx):
     await ctx.defer()
-    
+
     log_fields = {
         "🛫 Departure": "Los Angeles Intl (KLAX)",
         "🛬 Arrival": "San Francisco Intl (KSFO)",
@@ -54,11 +53,13 @@ async def send_test_log(ctx):
 
     embed.set_footer(text="Boat Flight Log Bot • Buckshot Gaming")
 
-    channel = bot.get_channel(CHANNEL_ID)
-    if channel:
+    try:
+        channel = await bot.fetch_channel(CHANNEL_ID)
         await channel.send(embed=embed)
         await ctx.respond("✅ Test log sent to the flight log channel.", ephemeral=True)
-    else:
-        await ctx.respond("❌ Failed to find the log channel.", ephemeral=True)
+    except Exception as e:
+        print(f"Failed to send embed: {e}")
+        await ctx.respond("❌ Could not send log. Check bot permissions or channel ID.", ephemeral=True)
 
 bot.run(BOT_TOKEN)
+
