@@ -34,7 +34,8 @@ async def sendtestlog(ctx):
     if ctx.channel.id != LOG_CHANNEL_ID:
         await ctx.send("❌ This command can only be used in the log channel.")
         return
-    await ctx.send("🛫 Test flight log:
+    await ctx.send("🛫 Test flight log: N123AB from KSEA to KSFO. Duration: 2h 14m.")
+
 **Aircraft**: TBM 930
 **Departure**: CYVR
 **Arrival**: CYYZ
