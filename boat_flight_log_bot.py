@@ -9,7 +9,8 @@ import discord
 from discord.ext import commands
 
 # Load Discord token
-token = os.getenv("DISCORD_TOKEN")
+token = os.getenv("DISCORD_TOKEN") or os.getenv("DISCORD_BOT_TOKEN")
+
 if not token:
     print("❌ DISCORD_TOKEN environment variable not found!")
 else:
