@@ -8,8 +8,8 @@ intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="/", intents=intents)
 
 # ✅ Secure and stable setup
-BOT_TOKEN = os.getenv("BOT_TOKEN")  # pulled from Render env vars
-CHANNEL_ID = 1370124659676287018  # ← hardcoded for now, confirmed working
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHANNEL_ID = 1370124659676287018  # your actual flight log channel
 
 if not BOT_TOKEN:
     print("❌ BOT_TOKEN is missing or not set in environment variables.")
@@ -56,10 +56,11 @@ async def send_test_log(ctx):
     try:
         channel = await bot.fetch_channel(CHANNEL_ID)
         await channel.send(embed=embed)
-        await ctx.respond("✅ Test log sent to the flight log channel.", ephemeral=True)
+        await ctx.followup.send("✅ Test log sent to the flight log channel.", ephemeral=True)
     except Exception as e:
         print(f"Failed to send embed: {e}")
-        await ctx.respond("❌ Could not send log. Check bot permissions or channel ID.", ephemeral=True)
+        await ctx.followup.send("❌ Could not send log. Check bot permissions or channel ID.", ephemeral=True)
 
 bot.run(BOT_TOKEN)
+
 
